@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
+    private String searchUrl;
     private ImageResultsAdapter aImageResults;
 
     @Override
@@ -37,9 +38,26 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupViews();
-        imageResults = new ArrayList<ImageResult>();
-        aImageResults = new ImageResultsAdapter(this, imageResults);
-        gvResults.setAdapter(aImageResults);
+        setupAdapter();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void setupViews() {
@@ -56,19 +74,10 @@ public class MainActivity extends Activity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
     public void onImageSearch(View view) {
         String query = etQuery.getText().toString();
+        String searchUrl = generateSearchUrl(query);
 
-        // https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=android&rsz=2
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="
-                + query + "&rsz=8";
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
@@ -87,18 +96,27 @@ public class MainActivity extends Activity {
 
     public void onChangeSettings(MenuItem item) {
         Intent changeSettings = new Intent(this, SettingsActivity.class);
+
+        // TODO make own helper func
+        if (getIntent().hasExtra("size")) {
+            changeSettings.putExtra("size", getIntent().getStringExtra("size"));
+        }
         startActivity(changeSettings);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+    private void setupAdapter() {
+        imageResults = new ArrayList<ImageResult>();
+        aImageResults = new ImageResultsAdapter(this, imageResults);
+        gvResults.setAdapter(aImageResults);
+    }
+
+    private String generateSearchUrl(String query) {
+        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="
+                + query;
+        if(getIntent().hasExtra("size")
+                && !getIntent().getStringExtra("size").equals("any")) {
+            searchUrl += "&imgsz=" + getIntent().getStringExtra("size");
         }
-        return super.onOptionsItemSelected(item);
+        return searchUrl;
     }
 }
