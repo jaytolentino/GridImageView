@@ -15,10 +15,9 @@ __Required__
   * Type (faces, photo, clip art, line art)
   * Site (espn.com)
 * Subsequent searches will have any filters applied to the search results
+* User can scroll down “infinitely” to continue loading more image results (up to 8 pages)
 
 - - -
-
-* User can scroll down “infinitely” to continue loading more image results (up to 8 pages)
 
 _Optional_
 * Advanced: Use the ActionBar SearchView or custom layout as the query box instead of an EditText

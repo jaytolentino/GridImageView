@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
+import com.example.jltolent.gridimageview.adapters.EndlessScrollListener;
 import com.example.jltolent.gridimageview.adapters.ImageResultsAdapter;
 import com.example.jltolent.gridimageview.models.ImageResult;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,8 +31,9 @@ public class MainActivity extends Activity {
     private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
-    private String searchUrl;
     private ImageResultsAdapter aImageResults;
+    private final int RESULTS_COUNT = 8;
+    private String searchUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,32 @@ public class MainActivity extends Activity {
                 startActivity(displayImage);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                String searchForMoreUrl = searchUrl + "&start=" + imageResults.size();
+                Log.i("INFO", "Search for More Url: " + searchForMoreUrl);
+
+                // TODO turn into helper?
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get(searchForMoreUrl, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        JSONArray resultsJson = null;
+                        try {
+                            resultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                            aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void toast() {
+        Toast.makeText(this, "boop", Toast.LENGTH_SHORT);
     }
 
     public void onImageSearch(View view) {
@@ -85,7 +113,7 @@ public class MainActivity extends Activity {
                 JSONArray resultsJson = null;
                 try {
                     resultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear(); // TODO clear ONLY when doing a new search, note for pagination
+                    imageResults.clear();
                     aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,6 +154,8 @@ public class MainActivity extends Activity {
                 && !getIntent().getStringExtra("site").equals("")) {
             searchUrl += "&as_sitesearch=" + getIntent().getStringExtra("site");
         }
+        searchUrl += "&rsz=" + RESULTS_COUNT;
+        this.searchUrl = searchUrl;
         Log.i("INFO", "Search URL: " + searchUrl);
         return searchUrl;
     }
