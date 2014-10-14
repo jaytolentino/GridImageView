@@ -96,11 +96,7 @@ public class MainActivity extends Activity {
 
     public void onChangeSettings(MenuItem item) {
         Intent changeSettings = new Intent(this, SettingsActivity.class);
-
-        // TODO make own helper func
-        if (getIntent().hasExtra("size")) {
-            changeSettings.putExtra("size", getIntent().getStringExtra("size"));
-        }
+        changeSettings = addSettingsExtras(changeSettings);
         startActivity(changeSettings);
     }
 
@@ -117,6 +113,20 @@ public class MainActivity extends Activity {
                 && !getIntent().getStringExtra("size").equals("any")) {
             searchUrl += "&imgsz=" + getIntent().getStringExtra("size");
         }
+        if(getIntent().hasExtra("color")
+                && !getIntent().getStringExtra("color").equals("any")) {
+            searchUrl += "&imgcolor=" + getIntent().getStringExtra("color");
+        }
         return searchUrl;
+    }
+
+    private Intent addSettingsExtras(Intent nextActivity) {
+        if (getIntent().hasExtra("size")) {
+            nextActivity.putExtra("size", getIntent().getStringExtra("size"));
+        }
+        if (getIntent().hasExtra("color")) {
+            nextActivity.putExtra("color", getIntent().getStringExtra("color"));
+        }
+        return nextActivity;
     }
 }

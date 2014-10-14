@@ -14,6 +14,7 @@ import com.example.jltolent.gridimageview.R;
 
 public class SettingsActivity extends Activity {
     private String size;
+    private String color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,50 +47,125 @@ public class SettingsActivity extends Activity {
     public void onSaveSettings(View view) {
         Intent toSearch = new Intent(this, MainActivity.class);
         toSearch.putExtra("size", size);
+        toSearch.putExtra("color", color);
         startActivity(toSearch);
     }
 
     private void setupFields() {
         size = "any";
+        color = "any";
     }
 
     private void setupSpinners() {
-        Spinner spImageSize = (Spinner) findViewById(R.id.spImageSize);
-        spImageSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                size = parent.getItemAtPosition(pos).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
-        });
+        setupSpinner("size", R.id.spImageSize);
+        setupSpinner("color", R.id.spColor);
         checkPreviousSettings();
     }
 
     private void checkPreviousSettings() {
-        if (getIntent().hasExtra("size")) {
-            String sizeSetting = getIntent().getStringExtra("size");
-            if (!sizeSetting.equals("any")) {
-                Spinner spImageSize = (Spinner) findViewById(R.id.spImageSize);
-                if (sizeSetting.equals("small")) {
-                    spImageSize.setSelection(1);
-                }
-                else if (sizeSetting.equals("medium")) {
-                    spImageSize.setSelection(2);
-                }
-                else if (sizeSetting.equals("large")) {
-                    spImageSize.setSelection(3);
-                }
-                else if (sizeSetting.equals("xlarge")) {
-                    spImageSize.setSelection(4);
+        checkSettingsFor("size");
+        checkSettingsFor("color");
+    }
+
+    private void checkSettingsFor(String attribute) {
+        if (getIntent().hasExtra(attribute)) {
+            String previousSetting = getIntent().getStringExtra(attribute);
+            if (!previousSetting.equals("any")) {
+                switch(attribute) {
+                    case "size":
+                        adjustSizeSpinner(previousSetting);
+                        break;
+                    case "color":
+                        adjustColorSpinner(previousSetting);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
     }
 
-    // TODO remove this test toast
-    private void toast() {
-        Toast.makeText(this, size, Toast.LENGTH_SHORT).show();
+    private void adjustSizeSpinner(String sizeSetting) {
+        Spinner spImageSize = (Spinner) findViewById(R.id.spImageSize);
+        switch (sizeSetting) {
+            case "small":
+                spImageSize.setSelection(1);
+                break;
+            case "medium":
+                spImageSize.setSelection(2);
+                break;
+            case "large":
+                spImageSize.setSelection(3);
+                break;
+            case "xlarge":
+                spImageSize.setSelection(4);
+                break;
+            default:
+                spImageSize.setSelection(0);
+                break;
+        }
+    }
+
+
+    private void adjustColorSpinner(String colorSetting) {
+        Spinner spColor = (Spinner) findViewById(R.id.spColor);
+        switch (colorSetting) {
+            case "black":
+                spColor.setSelection(1);
+                break;
+            case "brown":
+                spColor.setSelection(2);
+                break;
+            case "gray":
+                spColor.setSelection(3);
+                break;
+            case "red":
+                spColor.setSelection(4);
+                break;
+            case "orange":
+                spColor.setSelection(5);
+                break;
+            case "yellow":
+                spColor.setSelection(6);
+                break;
+            case "green":
+                spColor.setSelection(7);
+                break;
+            case "blue":
+                spColor.setSelection(8);
+                break;
+            case "purple":
+                spColor.setSelection(9);
+                break;
+            case "white":
+                spColor.setSelection(10);
+                break;
+            default:
+                spColor.setSelection(0);
+                break;
+        }
+    }
+
+    private void setupSpinner(String attribute, int spinnerId) {
+        final String finalAttribute = attribute;
+        Spinner spinner = (Spinner) findViewById(spinnerId);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                changeAttribute(finalAttribute, parent.getItemAtPosition(pos).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+    }
+
+    private void changeAttribute(String attribute, String value) {
+        if (attribute.equals("size")) {
+            size = value;
+        }
+        else if (attribute.equals("color")) {
+            color = value;
+        }
     }
 }

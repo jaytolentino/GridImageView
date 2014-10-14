@@ -18,6 +18,7 @@
         <item>green</item>
         <item>blue</item>
         <item>purple</item>
+        <item>white</item>
     </string-array>
     <string-array name="image_types">
         <item>any</item>

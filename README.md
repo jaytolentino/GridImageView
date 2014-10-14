@@ -11,11 +11,11 @@ __Required__
 * User can click on "settings" which allows selection of advanced search options to filter results
 * User can configure advanced search filters such as:
   * Size (small, medium, large, extra-large)
+  * Color filter (black, blue, brown, gray, green, etc...)
 
 - - -
 
 * User can configure advanced search filters such as:
-  * Color filter (black, blue, brown, gray, green, etc...)
   * Type (faces, photo, clip art, line art)
   * Site (espn.com)
 * Subsequent searches will have any filters applied to the search results
