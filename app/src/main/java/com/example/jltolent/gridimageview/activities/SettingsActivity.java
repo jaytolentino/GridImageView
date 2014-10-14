@@ -7,10 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
+
+import org.w3c.dom.Text;
 
 public class SettingsActivity extends Activity {
     private String size;
@@ -50,6 +54,12 @@ public class SettingsActivity extends Activity {
         toSearch.putExtra("size", size);
         toSearch.putExtra("color", color);
         toSearch.putExtra("type", type);
+
+        EditText etSite = (EditText) findViewById(R.id.etSite);
+        if (etSite.getText() != null) {
+            toSearch.putExtra("site", etSite.getText().toString());
+        }
+
         startActivity(toSearch);
     }
 
@@ -66,10 +76,26 @@ public class SettingsActivity extends Activity {
         checkPreviousSettings();
     }
 
+    private void setupSpinner(String attribute, int spinnerId) {
+        final String finalAttribute = attribute;
+        Spinner spinner = (Spinner) findViewById(spinnerId);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                changeAttribute(finalAttribute, parent.getItemAtPosition(pos).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
     private void checkPreviousSettings() {
         checkSettingsFor("size");
         checkSettingsFor("color");
         checkSettingsFor("type");
+        checkSettingsFor("site");
     }
 
     private void checkSettingsFor(String attribute) {
@@ -85,6 +111,9 @@ public class SettingsActivity extends Activity {
                         break;
                     case "type":
                         adjustTypeSpinner(previousSetting);
+                        break;
+                    case "site":
+                        adjustSiteText(previousSetting);
                         break;
                     default:
                         break;
@@ -154,6 +183,11 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    private void adjustSiteText(String siteSetting) {
+        EditText etSite = (EditText) findViewById(R.id.etSite);
+        etSite.setText(siteSetting);
+    }
+
     private void adjustTypeSpinner(String typeSetting) {
         Spinner spImageType = (Spinner) findViewById(R.id.spImageType);
         switch (typeSetting) {
@@ -173,20 +207,6 @@ public class SettingsActivity extends Activity {
                 spImageType.setSelection(0);
                 break;
         }
-    }
-
-    private void setupSpinner(String attribute, int spinnerId) {
-        final String finalAttribute = attribute;
-        Spinner spinner = (Spinner) findViewById(spinnerId);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                changeAttribute(finalAttribute, parent.getItemAtPosition(pos).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
-        });
     }
 
     private void changeAttribute(String attribute, String value) {

@@ -121,6 +121,11 @@ public class MainActivity extends Activity {
                 && !getIntent().getStringExtra("type").equals("any")) {
             searchUrl += "&imgtype=" + getIntent().getStringExtra("type");
         }
+        if(getIntent().hasExtra("site")
+                && !getIntent().getStringExtra("site").equals("any")
+                && !getIntent().getStringExtra("site").equals("")) {
+            searchUrl += "&as_sitesearch=" + getIntent().getStringExtra("site");
+        }
         Log.i("INFO", "Search URL: " + searchUrl);
         return searchUrl;
     }
@@ -134,6 +139,9 @@ public class MainActivity extends Activity {
         }
         if (getIntent().hasExtra("type")) {
             nextActivity.putExtra("type", getIntent().getStringExtra("type"));
+        }
+        if (getIntent().hasExtra("site")) {
+            nextActivity.putExtra("site", getIntent().getStringExtra("site"));
         }
         return nextActivity;
     }

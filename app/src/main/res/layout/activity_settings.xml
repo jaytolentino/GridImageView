@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_image_type_label"
-        android:id="@+id/textView2"
+        android:id="@+id/tvImageTypeLabel"
         android:layout_below="@+id/tvColorLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -79,8 +79,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/spImageType"
         android:layout_below="@+id/spColor"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
+        android:layout_toRightOf="@+id/tvImageTypeLabel"
+        android:layout_toEndOf="@+id/tvImageTypeLabel"
         android:spinnerMode="dropdown"
         android:entries="@array/image_types"
         android:layout_alignParentRight="true"
@@ -90,19 +90,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_site_label"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/textView2"
+        android:id="@+id/tvSettingsLabel"
+        android:layout_below="@+id/tvImageTypeLabel"
+        android:layout_alignBottom="@+id/etSite"
+        android:layout_alignRight="@+id/tvImageTypeLabel"
+        android:layout_alignEnd="@+id/tvImageTypeLabel"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/editText" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/etSite"
         android:layout_below="@+id/spImageType"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
+        android:layout_toRightOf="@+id/tvImageTypeLabel"
+        android:layout_toEndOf="@+id/tvImageTypeLabel"
         android:hint="@string/hint_site_filter"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -112,7 +114,7 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:id="@+id/btnSaveSettings"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/etSite"
         android:layout_centerHorizontal="true"
         android:onClick="onSaveSettings"/>
 
