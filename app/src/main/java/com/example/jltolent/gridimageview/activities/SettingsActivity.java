@@ -15,6 +15,7 @@ import com.example.jltolent.gridimageview.R;
 public class SettingsActivity extends Activity {
     private String size;
     private String color;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,23 +49,27 @@ public class SettingsActivity extends Activity {
         Intent toSearch = new Intent(this, MainActivity.class);
         toSearch.putExtra("size", size);
         toSearch.putExtra("color", color);
+        toSearch.putExtra("type", type);
         startActivity(toSearch);
     }
 
     private void setupFields() {
         size = "any";
         color = "any";
+        type = "any";
     }
 
     private void setupSpinners() {
         setupSpinner("size", R.id.spImageSize);
         setupSpinner("color", R.id.spColor);
+        setupSpinner("type", R.id.spImageType);
         checkPreviousSettings();
     }
 
     private void checkPreviousSettings() {
         checkSettingsFor("size");
         checkSettingsFor("color");
+        checkSettingsFor("type");
     }
 
     private void checkSettingsFor(String attribute) {
@@ -77,6 +82,9 @@ public class SettingsActivity extends Activity {
                         break;
                     case "color":
                         adjustColorSpinner(previousSetting);
+                        break;
+                    case "type":
+                        adjustTypeSpinner(previousSetting);
                         break;
                     default:
                         break;
@@ -146,6 +154,27 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    private void adjustTypeSpinner(String typeSetting) {
+        Spinner spImageType = (Spinner) findViewById(R.id.spImageType);
+        switch (typeSetting) {
+            case "faces":
+                spImageType.setSelection(1);
+                break;
+            case "photo":
+                spImageType.setSelection(2);
+                break;
+            case "clipart":
+                spImageType.setSelection(3);
+                break;
+            case "lineart":
+                spImageType.setSelection(4);
+                break;
+            default:
+                spImageType.setSelection(0);
+                break;
+        }
+    }
+
     private void setupSpinner(String attribute, int spinnerId) {
         final String finalAttribute = attribute;
         Spinner spinner = (Spinner) findViewById(spinnerId);
@@ -161,11 +190,18 @@ public class SettingsActivity extends Activity {
     }
 
     private void changeAttribute(String attribute, String value) {
-        if (attribute.equals("size")) {
-            size = value;
-        }
-        else if (attribute.equals("color")) {
-            color = value;
+        switch(attribute) {
+            case "size":
+                size = value;
+                break;
+            case "color":
+                color = value;
+                break;
+            case "type":
+                type = value;
+                break;
+            default:
+                break;
         }
     }
 }

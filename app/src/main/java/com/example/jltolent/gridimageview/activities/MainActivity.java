@@ -117,6 +117,11 @@ public class MainActivity extends Activity {
                 && !getIntent().getStringExtra("color").equals("any")) {
             searchUrl += "&imgcolor=" + getIntent().getStringExtra("color");
         }
+        if(getIntent().hasExtra("type")
+                && !getIntent().getStringExtra("type").equals("any")) {
+            searchUrl += "&imgtype=" + getIntent().getStringExtra("type");
+        }
+        Log.i("INFO", "Search URL: " + searchUrl);
         return searchUrl;
     }
 
@@ -126,6 +131,9 @@ public class MainActivity extends Activity {
         }
         if (getIntent().hasExtra("color")) {
             nextActivity.putExtra("color", getIntent().getStringExtra("color"));
+        }
+        if (getIntent().hasExtra("type")) {
+            nextActivity.putExtra("type", getIntent().getStringExtra("type"));
         }
         return nextActivity;
     }

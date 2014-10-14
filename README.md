@@ -12,11 +12,11 @@ __Required__
 * User can configure advanced search filters such as:
   * Size (small, medium, large, extra-large)
   * Color filter (black, blue, brown, gray, green, etc...)
+  * Type (faces, photo, clip art, line art)
 
 - - -
 
 * User can configure advanced search filters such as:
-  * Type (faces, photo, clip art, line art)
   * Site (espn.com)
 * Subsequent searches will have any filters applied to the search results
 * User can scroll down “infinitely” to continue loading more image results (up to 8 pages)
