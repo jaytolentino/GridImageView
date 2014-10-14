@@ -1,11 +1,13 @@
 package com.example.jltolent.gridimageview.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 
@@ -42,6 +44,15 @@ public class MainActivity extends Activity {
     public void setupViews() {
         etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
+        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent displayImage = new Intent(MainActivity.this, ImageDisplayActivity.class);
+                ImageResult result = imageResults.get(position);
+                displayImage.putExtra("result", result);
+                startActivity(displayImage);
+            }
+        });
     }
 
 

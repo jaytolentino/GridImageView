@@ -8,5 +8,6 @@
     <string name="search_label">Search</string>
     <string name="image_title">Title</string>
     <string name="image_resource_description">Image Resource</string>
+    <string name="title_activity_image_display">Full Image</string>
 
 </resources>

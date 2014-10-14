@@ -7,10 +7,10 @@ Android app for searching and filtering through images via the Google Image Sear
 
 __Required__
 * User can enter a search query that will display a grid of image results from the Google Image API.
+* User can tap on any image in results to see the image full-screen
 
 - - -
 
-* User can tap on any image in results to see the image full-screen
 * User can click on "settings" which allows selection of advanced search options to filter results
 * User can configure advanced search filters such as:
   * Size (small, medium, large, extra-large)
