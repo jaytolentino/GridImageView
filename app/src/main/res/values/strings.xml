@@ -9,5 +9,14 @@
     <string name="image_title">Title</string>
     <string name="image_resource_description">Image Resource</string>
     <string name="title_activity_image_display">Full Image</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="app_title">Google Image Searcher</string>
+    <string name="search_title">Advanced search options</string>
+    <string name="settings_image_size_label">Image Size</string>
+    <string name="settings_color_label">Color Filter</string>
+    <string name="settings_image_type_label">Image Type</string>
+    <string name="settings_site_label">Site Filter</string>
+    <string name="hint_site_filter">Type a domain</string>
+    <string name="save">Save</string>
 
 </resources>

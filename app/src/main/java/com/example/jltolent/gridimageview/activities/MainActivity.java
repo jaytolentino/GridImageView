@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
 import com.example.jltolent.gridimageview.adapters.ImageResultsAdapter;
@@ -55,7 +56,6 @@ public class MainActivity extends Activity {
         });
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -83,6 +83,11 @@ public class MainActivity extends Activity {
                 }
             }
         });
+    }
+
+    public void onChangeSettings(MenuItem item) {
+        Intent changeSettings = new Intent(this, SettingsActivity.class);
+        startActivity(changeSettings);
     }
 
     @Override
