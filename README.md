@@ -17,11 +17,12 @@ __Required__
 * Subsequent searches will have any filters applied to the search results
 * User can scroll down “infinitely” to continue loading more image results (up to 8 pages)
 
+_Optional_
+* Advanced: User can share an image to their friends or email it to themselves
+
 - - -
 
-_Optional_
 * Advanced: Use the ActionBar SearchView or custom layout as the query box instead of an EditText
-* Advanced: User can share an image to their friends or email it to themselves
 * Advanced: Replace Filter Settings Activity with a lightweight modal overlay
 * Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
 * Advanced: Robust error handling, check if internet is available, handle error cases, network failures
