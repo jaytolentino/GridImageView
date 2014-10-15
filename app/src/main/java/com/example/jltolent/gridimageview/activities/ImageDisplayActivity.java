@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -20,13 +22,22 @@ import com.example.jltolent.gridimageview.models.ImageResult;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class ImageDisplayActivity extends Activity {
+public class ImageDisplayActivity extends ActionBarActivity {
     private ShareActionProvider miShareAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        miShareAction = new ShareActionProvider(this);
         setContentView(R.layout.activity_image_display);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.image_display, menu);
+        MenuItem item = menu.findItem(R.id.actionShare);
+        miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         final ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Loading...");
@@ -52,14 +63,7 @@ public class ImageDisplayActivity extends Activity {
 
                     }
                 });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.image_display, menu);
-        MenuItem item = menu.findItem(R.id.action_share);
-        miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         return true;
     }
 
@@ -87,7 +91,7 @@ public class ImageDisplayActivity extends Activity {
 
     private Uri getLocalBitmapUri(ImageView imageView) {
         Drawable mDrawable = imageView.getDrawable();
-        Bitmap mBitmap = ((BitmapDrawable)mDrawable).getBitmap();
+        Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
 
         String path = MediaStore.Images.Media.insertImage(getContentResolver(),
                 mBitmap, "Description", null);

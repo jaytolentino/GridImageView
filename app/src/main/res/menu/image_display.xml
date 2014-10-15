@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.jltolent.gridimageview.activities.ImageDisplayActivity" >
 
-    <item android:id="@+id/action_share"
+    <item android:id="@+id/actionShare"
         android:title="@string/action_share"
         app:showAsAction="ifRoom"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
