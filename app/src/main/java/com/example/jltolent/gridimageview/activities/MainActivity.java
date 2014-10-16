@@ -9,10 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.example.jltolent.gridimageview.R;
 import com.example.jltolent.gridimageview.adapters.EndlessScrollListener;
 import com.example.jltolent.gridimageview.adapters.ImageResultsAdapter;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements EditSettingsDialog.OnDataPass {
     private String query;
-    private GridView gvResults;
+    private StaggeredGridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private final int RESULTS_COUNT = 8;
@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
     }
 
     public void setupViews() {
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        gvResults = (StaggeredGridView) findViewById(R.id.gvResults);
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

@@ -11,7 +11,7 @@
     <string name="image_resource_description">Image Resource</string>
     <string name="title_activity_image_display">Full Image</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="app_title">Search</string>
+    <string name="app_title">Google Image Search</string>
     <string name="search_title">Advanced search options</string>
     <string name="settings_image_size_label">Image Size</string>
     <string name="settings_color_label">Color Filter</string>
