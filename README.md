@@ -20,10 +20,10 @@ __Required__
 _Optional_
 * Advanced: User can share an image to their friends or email it to themselves
 * Advanced: Use the ActionBar SearchView or custom layout as the query box instead of an EditText
+* Advanced: Replace Filter Settings Activity with a lightweight modal overlay
 
 - - -
 
-* Advanced: Replace Filter Settings Activity with a lightweight modal overlay
 * Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
 * Advanced: Robust error handling, check if internet is available, handle error cases, network failures
 * Bonus: Use the StaggeredGridView to display improve the grid of image results
