@@ -23,8 +23,8 @@ _Optional_
 * Advanced: Replace Filter Settings Activity with a lightweight modal overlay
 * Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
 * Bonus: Use the StaggeredGridView to display improve the grid of image results
+* Bonus: User can zoom or pan images displayed in full-screen detail view
 
 - - -
 
 * Advanced: Robust error handling, check if internet is available, handle error cases, network failures
-* Bonus: User can zoom or pan images displayed in full-screen detail view
