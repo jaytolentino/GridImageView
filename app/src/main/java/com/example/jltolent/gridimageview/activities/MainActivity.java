@@ -2,6 +2,7 @@ package com.example.jltolent.gridimageview.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -10,11 +11,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.support.v7.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
 import com.example.jltolent.gridimageview.adapters.EndlessScrollListener;
 import com.example.jltolent.gridimageview.adapters.ImageResultsAdapter;
+import com.example.jltolent.gridimageview.fragments.EditSettingsDialog;
 import com.example.jltolent.gridimageview.models.ImageResult;
+import com.example.jltolent.gridimageview.models.SettingsData;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -26,19 +30,27 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements EditSettingsDialog.OnDataPass {
     private String query;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private final int RESULTS_COUNT = 8;
     private String searchUrl;
+    private SettingsData mSettings;
+
+    @Override
+    public void onDataPass(SettingsData data) {
+        Toast.makeText(this, data.getImageColor(), Toast.LENGTH_SHORT).show();
+        mSettings = data;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = "";
+        mSettings = new SettingsData();
         setupViews();
         setupAdapter();
     }
@@ -96,8 +108,6 @@ public class MainActivity extends ActionBarActivity {
             public void onLoadMore(int page, int totalItemsCount) {
                 String searchForMoreUrl = searchUrl + "&start=" + imageResults.size();
                 Log.i("INFO", "Search for More Url: " + searchForMoreUrl);
-
-                // TODO turn into helper?
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.get(searchForMoreUrl, new JsonHttpResponseHandler() {
                     @Override
@@ -135,9 +145,15 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onChangeSettings(MenuItem item) {
-        Intent changeSettings = new Intent(this, SettingsActivity.class);
-        changeSettings = addSettingsExtras(changeSettings);
-        startActivity(changeSettings);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("settingsData", mSettings);
+        bundle.putString("title", "Edit Settings");
+
+        FragmentManager fm = getSupportFragmentManager();
+        EditSettingsDialog editSettingsDialog = EditSettingsDialog.newInstance("Edit Settings");
+        editSettingsDialog.setArguments(bundle);
+
+        editSettingsDialog.show(fm, "fragment_edit_settings_dialog");
     }
 
     private void setupAdapter() {
@@ -149,42 +165,21 @@ public class MainActivity extends ActionBarActivity {
     private String generateSearchUrl(String query) {
         String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="
                 + query;
-        if(getIntent().hasExtra("size")
-                && !getIntent().getStringExtra("size").equals("any")) {
-            searchUrl += "&imgsz=" + getIntent().getStringExtra("size");
+        if(mSettings.hasSize()) {
+            searchUrl += "&imgsz=" + mSettings.getSize();
         }
-        if(getIntent().hasExtra("color")
-                && !getIntent().getStringExtra("color").equals("any")) {
-            searchUrl += "&imgcolor=" + getIntent().getStringExtra("color");
+        if(mSettings.hasColor()) {
+            searchUrl += "&imgcolor=" + mSettings.getImageColor();
         }
-        if(getIntent().hasExtra("type")
-                && !getIntent().getStringExtra("type").equals("any")) {
-            searchUrl += "&imgtype=" + getIntent().getStringExtra("type");
+        if(mSettings.hasType()) {
+            searchUrl += "&imgtype=" + mSettings.getType();
         }
-        if(getIntent().hasExtra("site")
-                && !getIntent().getStringExtra("site").equals("any")
-                && !getIntent().getStringExtra("site").equals("")) {
-            searchUrl += "&as_sitesearch=" + getIntent().getStringExtra("site");
+        if(mSettings.hasSite()) {
+            searchUrl += "&as_sitesearch=" + mSettings.getSite();
         }
         searchUrl += "&rsz=" + RESULTS_COUNT;
         this.searchUrl = searchUrl;
         Log.i("INFO", "Search URL: " + searchUrl);
         return searchUrl;
-    }
-
-    private Intent addSettingsExtras(Intent nextActivity) {
-        if (getIntent().hasExtra("size")) {
-            nextActivity.putExtra("size", getIntent().getStringExtra("size"));
-        }
-        if (getIntent().hasExtra("color")) {
-            nextActivity.putExtra("color", getIntent().getStringExtra("color"));
-        }
-        if (getIntent().hasExtra("type")) {
-            nextActivity.putExtra("type", getIntent().getStringExtra("type"));
-        }
-        if (getIntent().hasExtra("site")) {
-            nextActivity.putExtra("site", getIntent().getStringExtra("site"));
-        }
-        return nextActivity;
     }
 }

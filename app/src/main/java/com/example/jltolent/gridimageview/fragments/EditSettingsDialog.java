@@ -1,72 +1,68 @@
-package com.example.jltolent.gridimageview.activities;
+package com.example.jltolent.gridimageview.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
+import com.example.jltolent.gridimageview.activities.MainActivity;
+import com.example.jltolent.gridimageview.models.SettingsData;
 
-import org.w3c.dom.Text;
+/**
+ * A simple {@link Fragment} subclass.
+ *
+ */
+public class EditSettingsDialog extends DialogFragment {
+    private View currentView;
+    private SettingsData mSettings;
+    private OnDataPass dataPasser;
 
-public class SettingsActivity extends Activity {
-    private String size;
-    private String color;
-    private String type;
+    public EditSettingsDialog() {
+        // Required empty public constructor
+    }
+
+    public static EditSettingsDialog newInstance(String title) {
+        EditSettingsDialog frag = new EditSettingsDialog();
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        frag.setArguments(args);
+        return frag;
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        currentView = inflater.inflate(R.layout.fragment_edit_settings_dialog, container);
+        String title = getArguments().getString("title");
 
-        setupFields();
+        getDialog().setTitle(title);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        final View btnSave = currentView.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataPasser.onDataPass(mSettings);
+                getDialog().dismiss();
+            }
+        });
+
+        mSettings = (SettingsData) getArguments().getSerializable("settingsData");
         setupSpinners();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onSaveSettings(View view) {
-        Intent toSearch = new Intent(this, MainActivity.class);
-        toSearch.putExtra("size", size);
-        toSearch.putExtra("color", color);
-        toSearch.putExtra("type", type);
-
-        EditText etSite = (EditText) findViewById(R.id.etSite);
-        if (etSite.getText() != null) {
-            toSearch.putExtra("site", etSite.getText().toString());
-        }
-
-        startActivity(toSearch);
-    }
-
-    private void setupFields() {
-        size = "any";
-        color = "any";
-        type = "any";
+        return currentView;
     }
 
     private void setupSpinners() {
@@ -78,17 +74,27 @@ public class SettingsActivity extends Activity {
 
     private void setupSpinner(String attribute, int spinnerId) {
         final String finalAttribute = attribute;
-        Spinner spinner = (Spinner) findViewById(spinnerId);
+        Spinner spinner = (Spinner) currentView.findViewById(spinnerId);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                changeAttribute(finalAttribute, parent.getItemAtPosition(pos).toString());
+                mSettings.changeAttribute(finalAttribute, parent.getItemAtPosition(pos).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
+
+    public interface OnDataPass {
+        public void onDataPass(SettingsData data);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        dataPasser = (OnDataPass) activity;
     }
 
     private void checkPreviousSettings() {
@@ -99,31 +105,29 @@ public class SettingsActivity extends Activity {
     }
 
     private void checkSettingsFor(String attribute) {
-        if (getIntent().hasExtra(attribute)) {
-            String previousSetting = getIntent().getStringExtra(attribute);
-            if (!previousSetting.equals("any")) {
-                switch(attribute) {
-                    case "size":
-                        adjustSizeSpinner(previousSetting);
-                        break;
-                    case "color":
-                        adjustColorSpinner(previousSetting);
-                        break;
-                    case "type":
-                        adjustTypeSpinner(previousSetting);
-                        break;
-                    case "site":
-                        adjustSiteText(previousSetting);
-                        break;
-                    default:
-                        break;
-                }
+        String previousSetting = mSettings.getAttribute(attribute);
+        if (!previousSetting.equals("any")) {
+            switch(attribute) {
+                case "size":
+                    adjustSizeSpinner(previousSetting);
+                    break;
+                case "color":
+                    adjustColorSpinner(previousSetting);
+                    break;
+                case "type":
+                    adjustTypeSpinner(previousSetting);
+                    break;
+                case "site":
+                    adjustSiteText(previousSetting);
+                    break;
+                default:
+                    break;
             }
         }
     }
 
     private void adjustSizeSpinner(String sizeSetting) {
-        Spinner spImageSize = (Spinner) findViewById(R.id.spImageSize);
+        Spinner spImageSize = (Spinner) currentView.findViewById(R.id.spImageSize);
         switch (sizeSetting) {
             case "small":
                 spImageSize.setSelection(1);
@@ -145,7 +149,7 @@ public class SettingsActivity extends Activity {
 
 
     private void adjustColorSpinner(String colorSetting) {
-        Spinner spColor = (Spinner) findViewById(R.id.spColor);
+        Spinner spColor = (Spinner) currentView.findViewById(R.id.spColor);
         switch (colorSetting) {
             case "black":
                 spColor.setSelection(1);
@@ -184,12 +188,12 @@ public class SettingsActivity extends Activity {
     }
 
     private void adjustSiteText(String siteSetting) {
-        EditText etSite = (EditText) findViewById(R.id.etSite);
+        EditText etSite = (EditText) currentView.findViewById(R.id.etSite);
         etSite.setText(siteSetting);
     }
 
     private void adjustTypeSpinner(String typeSetting) {
-        Spinner spImageType = (Spinner) findViewById(R.id.spImageType);
+        Spinner spImageType = (Spinner) currentView.findViewById(R.id.spImageType);
         switch (typeSetting) {
             case "faces":
                 spImageType.setSelection(1);
@@ -209,19 +213,5 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    private void changeAttribute(String attribute, String value) {
-        switch(attribute) {
-            case "size":
-                size = value;
-                break;
-            case "color":
-                color = value;
-                break;
-            case "type":
-                type = value;
-                break;
-            default:
-                break;
-        }
-    }
+
 }
