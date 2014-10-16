@@ -1,6 +1,10 @@
 package com.example.jltolent.gridimageview.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -21,6 +25,8 @@ import com.example.jltolent.gridimageview.models.ImageResult;
 import com.example.jltolent.gridimageview.models.SettingsData;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import com.example.jltolent.gridimageview.net.NetworkHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -108,19 +114,35 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
             public void onLoadMore(int page, int totalItemsCount) {
                 String searchForMoreUrl = searchUrl + "&start=" + imageResults.size();
                 Log.i("INFO", "Search for More Url: " + searchForMoreUrl);
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.get(searchForMoreUrl, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        JSONArray resultsJson = null;
-                        try {
-                            resultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                            aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                ConnectivityManager manager = (ConnectivityManager)
+                        MainActivity.this.getSystemService(CONNECTIVITY_SERVICE);
+
+                if (NetworkHandler.networkIsAvailable(manager)) {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.get(searchForMoreUrl, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            JSONArray resultsJson = null;
+                            try {
+                                resultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                                aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("No Network Available");
+                    builder.setMessage("Please check your connectivity.");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {}
+                    });
+                    builder.show();
+                }
             }
         });
     }
@@ -128,20 +150,33 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
     public void onImageSearch() {
         String searchUrl = generateSearchUrl(query);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(searchUrl, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray resultsJson = null;
-                try {
-                    resultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear();
-                    aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if (NetworkHandler.networkIsAvailable(
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(searchUrl, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray resultsJson = null;
+                    try {
+                        resultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                        imageResults.clear();
+                        aImageResults.addAll(ImageResult.fromJsonArray(resultsJson));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("No Network Available");
+            builder.setMessage("Please check your connectivity.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {}
+            });
+            builder.show();
+        }
     }
 
     public void onChangeSettings(MenuItem item) {

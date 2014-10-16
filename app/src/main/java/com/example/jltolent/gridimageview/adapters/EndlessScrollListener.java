@@ -1,7 +1,11 @@
 package com.example.jltolent.gridimageview.adapters;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Log;
 import android.widget.AbsListView;
+
+import com.example.jltolent.gridimageview.activities.MainActivity;
 
 /**
  * Created by jay on 10/14/14.
