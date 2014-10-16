@@ -10,11 +10,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_title"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_title"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
         <activity
             android:name=".activities.ImageDisplayActivity"
             android:label="@string/title_activity_image_display"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.AppCompat.Light"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

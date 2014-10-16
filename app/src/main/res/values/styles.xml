@@ -5,5 +5,12 @@
         <!-- Customize your theme here. -->
 
     </style>
-
+    <style name="buttons" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/teal</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+    <style name="dialogs">
+        <item name="android:textColor">@color/teal</item>
+    </style>
 </resources>

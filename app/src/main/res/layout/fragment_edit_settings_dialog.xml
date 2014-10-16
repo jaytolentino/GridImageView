@@ -18,7 +18,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical|right"
         android:layout_toLeftOf="@+id/spColor"
-        android:layout_toStartOf="@+id/spColor" />
+        android:layout_toStartOf="@+id/spColor"
+        android:layout_marginTop="@dimen/pad_left_small" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -33,7 +34,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_toRightOf="@+id/tvImageSizeLabel"
-        android:layout_marginLeft="@dimen/pad_left_small" />
+        android:layout_marginLeft="@dimen/pad_left_small"
+        android:layout_marginTop="@dimen/pad_left_small" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,7 +48,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:padding="@dimen/activity_vertical_margin" />
+        android:padding="@dimen/activity_vertical_margin"
+        style="@style/buttons" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,7 +119,7 @@
         android:layout_toLeftOf="@+id/spImageType"
         android:layout_toStartOf="@+id/spImageType"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:gravity="center_vertical|right" />
+        android:gravity="center_vertical|right"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -132,6 +135,7 @@
         android:layout_marginLeft="@dimen/pad_left_small" />
 
     <Button
+        style="@style/buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"

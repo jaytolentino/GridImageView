@@ -32,10 +32,8 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_image_result, parent, false);
         }
         ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 
         ivImage.setImageResource(0);
-        tvTitle.setText(Html.fromHtml(imageInfo.title));
         Picasso.with(getContext()).load(imageInfo.thumbUrl).placeholder(R.drawable.ic_launcher).into(ivImage);
 
         return convertView;

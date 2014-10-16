@@ -44,6 +44,7 @@ public class EditSettingsDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         currentView = inflater.inflate(R.layout.fragment_edit_settings_dialog, container);
         String title = getArguments().getString("title");
 
