@@ -24,7 +24,14 @@ _Optional_
 * Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
 * Bonus: Use the StaggeredGridView to display improve the grid of image results
 * Bonus: User can zoom or pan images displayed in full-screen detail view
+* Advanced: Robust error handling, check if internet is available, handle error cases, network failures
 
 - - -
 
-* Advanced: Robust error handling, check if internet is available, handle error cases, network failures
+## User Story Walkthrough
+
+### Required Stories
+<img src="/gif/gridImageView_required.gif" width="300"/>
+
+### Optional Stories
+<img src="/gif/gridImageView_optional.gif" width="300"/>
