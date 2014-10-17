@@ -47,7 +47,6 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
 
     @Override
     public void onDataPass(SettingsData data) {
-        Toast.makeText(this, data.getImageColor(), Toast.LENGTH_SHORT).show();
         mSettings = data;
     }
 
@@ -56,7 +55,12 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = "";
-        mSettings = new SettingsData();
+        if (getIntent().hasExtra("settings")) {
+            mSettings = (SettingsData) getIntent().getSerializableExtra("settings");
+        }
+        else {
+            mSettings = new SettingsData();
+        }
         setupViews();
         setupAdapter();
     }
@@ -106,6 +110,7 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
                 Intent displayImage = new Intent(MainActivity.this, ImageDisplayActivity.class);
                 ImageResult result = imageResults.get(position);
                 displayImage.putExtra("result", result);
+                displayImage.putExtra("settings", mSettings);
                 startActivity(displayImage);
             }
         });
@@ -131,17 +136,15 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
                                 e.printStackTrace();
                             }
                         }
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            disconnectedFromInternetAlert();
+                        }
                     });
                 }
                 else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("No Network Available");
-                    builder.setMessage("Please check your connectivity.");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {}
-                    });
-                    builder.show();
+                    disconnectedFromInternetAlert();
                 }
             }
         });
@@ -165,17 +168,16 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
                         e.printStackTrace();
                     }
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    disconnectedFromInternetAlert();
+                }
             });
         }
         else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("No Network Available");
-            builder.setMessage("Please check your connectivity.");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {}
-            });
-            builder.show();
+            disconnectedFromInternetAlert();
         }
     }
 
@@ -216,5 +218,16 @@ public class MainActivity extends ActionBarActivity implements EditSettingsDialo
         this.searchUrl = searchUrl;
         Log.i("INFO", "Search URL: " + searchUrl);
         return searchUrl;
+    }
+
+    private void disconnectedFromInternetAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("No Network Available");
+        builder.setMessage("Please check your connectivity.");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}
+        });
+        builder.show();
     }
 }

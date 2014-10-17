@@ -14,20 +14,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.support.v7.widget.ShareActionProvider;
+import android.widget.Toast;
 
 import com.example.jltolent.gridimageview.R;
 import com.example.jltolent.gridimageview.models.ImageResult;
+import com.example.jltolent.gridimageview.models.SettingsData;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class ImageDisplayActivity extends ActionBarActivity {
     private ShareActionProvider miShareAction;
+    private SettingsData mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().hasExtra("settings")) {
+            mSettings = (SettingsData) getIntent().getSerializableExtra("settings");
+        }
+        else {
+            mSettings = new SettingsData();
+        }
         miShareAction = new ShareActionProvider(this);
         setContentView(R.layout.activity_image_display);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -37,11 +47,53 @@ public class ImageDisplayActivity extends ActionBarActivity {
         MenuItem item = menu.findItem(R.id.actionShare);
         miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
-        final ProgressDialog progress = new ProgressDialog(this);
+        ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Loading...");
         progress.setMessage("Please wait.");
         progress.show();
 
+        displayImage(progress);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == android.R.id.home) {
+            getIntent().putExtra("settings", mSettings);
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupShareIntent() {
+        ImageView ivImageResult = (ImageView) findViewById(R.id.ivImageResult);
+        Uri bmpUri = getLocalBitmapUri(ivImageResult);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+        shareIntent.setType("image/*");
+        miShareAction.setShareIntent(shareIntent);
+    }
+
+    private Uri getLocalBitmapUri(ImageView imageView) {
+        Drawable mDrawable = imageView.getDrawable();
+        Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                mBitmap, "Description", null);
+        Uri uri = Uri.parse(path);
+        return uri;
+    }
+
+    private void displayImage(final ProgressDialog progress) {
         ImageResult result = (ImageResult) getIntent().getSerializableExtra("result");
         ImageView ivImageResult = (ImageView) findViewById(R.id.ivImageResult);
         Picasso.with(this)
@@ -61,40 +113,5 @@ public class ImageDisplayActivity extends ActionBarActivity {
 
                     }
                 });
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void setupShareIntent() {
-        ImageView ivImageResult = (ImageView) findViewById(R.id.ivImageResult);
-        Uri bmpUri = getLocalBitmapUri(ivImageResult);
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-        shareIntent.setType("image/*");
-        miShareAction.setShareIntent(shareIntent);
-    }
-
-    private Uri getLocalBitmapUri(ImageView imageView) {
-        Drawable mDrawable = imageView.getDrawable();
-        Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
-
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
-                mBitmap, "Description", null);
-
-        Uri uri = Uri.parse(path);
-        return uri;
     }
 }
